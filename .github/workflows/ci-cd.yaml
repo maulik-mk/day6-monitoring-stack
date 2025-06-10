@@ -36,10 +36,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build MERN image
-        run: docker build -t maulik010101/day5-mern-pipeline:latest .
+        run: docker build -t maulik010101/maulik-day6-monitoring-stack:latest .
 
       - name: Push Docker image to Docker Hub
-        run: docker push maulik010101/day5-mern-pipeline:latest
+        run: docker push maulik010101/maulik-day6-monitoring-stack:latest
 
       - name: Trigger Render Deploy Hook
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}

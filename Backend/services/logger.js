@@ -1,5 +1,6 @@
 import winston from 'winston';
 import 'winston-mongodb';
+import LokiTransport from 'winston-loki';
 
 export const createLogger = (mongoUri) => {
   return winston.createLogger({
@@ -12,11 +13,15 @@ export const createLogger = (mongoUri) => {
       new winston.transports.Console(),
       new winston.transports.MongoDB({
         db: mongoUri,
-        options: {},
         collection: 'logs',
         tryReconnect: true,
-        format: winston.format.json(),
-      })
-    ]
+      }),
+      new LokiTransport({
+        host: process.env.LOKI_URL,
+        basicAuth: `${process.env.LOKI_USER}:${process.env.LOKI_API_KEY}`,
+        labels: { job: 'node-app' },
+        json: true,
+      }),
+    ],
   });
 };
