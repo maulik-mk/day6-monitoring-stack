@@ -4,12 +4,10 @@ import 'winston-mongodb';
 import LokiTransport from 'winston-loki';
 
 export const createLogger = (mongoUri) => {
-  // --- START: Added for debugging ---
   console.log('Initializing logger...');
   console.log('Loki Host from env:', process.env.LOKI_URL);
   console.log('Loki User from env:', process.env.LOKI_USER);
   console.log('Is LOKI_API_KEY set?', !!process.env.LOKI_API_KEY);
-  // --- END: Added for debugging ---
 
   return winston.createLogger({
     level: 'info',
@@ -26,7 +24,7 @@ export const createLogger = (mongoUri) => {
       }),
       new LokiTransport({
         host: process.env.LOKI_URL,
-        basicAuth: `<span class="math-inline">\{process\.env\.LOKI\_USER\}\:</span>{process.env.LOKI_API_KEY}`,
+        basicAuth: `${process.env.LOKI_USER}:${process.env.LOKI_API_KEY}`,
         labels: { job: 'node-app' },
         json: true,
       }),
