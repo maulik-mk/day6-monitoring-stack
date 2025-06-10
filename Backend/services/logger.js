@@ -8,6 +8,9 @@ export const createLogger = (mongoUri) => {
   console.log('Loki Host from env:', process.env.LOKI_URL);
   console.log('Loki User from env:', process.env.LOKI_USER);
   console.log('Is LOKI_API_KEY set?', !!process.env.LOKI_API_KEY);
+  console.log('Attempting to connect to Loki with config:');
+  console.log('  Host:', process.env.LOKI_URL);
+  console.log('  Labels:', { job: 'node-app' });
 
   return winston.createLogger({
     level: 'info',
@@ -24,9 +27,10 @@ export const createLogger = (mongoUri) => {
       }),
       new LokiTransport({
         host: process.env.LOKI_URL,
-        basicAuth: `${process.env.LOKI_USER}:${process.env.LOKI_API_KEY}`,
+        basicAuth: `<span class="math-inline">\{process\.env\.LOKI\_USER\}\:</span>{process.env.LOKI_API_KEY}`,
         labels: { job: 'node-app' },
         json: true,
+        onConnectionError: (err) => console.error('Loki Transport Connection Error:', err),
       }),
     ],
   });
