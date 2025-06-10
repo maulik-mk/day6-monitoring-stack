@@ -27,10 +27,12 @@ export const createLogger = (mongoUri) => {
       }),
       new LokiTransport({
         host: process.env.LOKI_URL,
-        basicAuth: `${process.env.LOKI_USER}:${process.env.LOKI_API_KEY}`,
-        labels: { job: 'node-app' },
+        labels: { app: 'my-app' },
         json: true,
-        onConnectionError: (err) => console.error('Loki Transport Connection Error:', err),
+        basicAuth: `${process.env.LOKI_USER}:${process.env.LOKI_API_KEY}`,
+        format: winston.format.json(),
+        replaceTimestamp: true,
+        onConnectionError: (err) => console.error(err),
       }),
     ],
   });
